@@ -58,6 +58,23 @@
   --color-bg-btn-text-hover:    #2e3d5c;  /* text-button hover 배경 */
 
   /* ─────────────────────────────────────────
+   * Color — Status (badge 전용)
+   * ───────────────────────────────────────── */
+  --color-status-approve-bg:    #2b4448;  /* published 배경 */
+  --color-status-approve-text:  #07bd1c;  /* published 텍스트 */
+  --color-status-pending-bg:    #494349;  /* pending 배경 */
+  --color-status-pending-text:  #fdb428;  /* pending 텍스트 */
+  --color-status-reject-bg:     #47334b;  /* rejected 배경 */
+  --color-status-reject-text:   #ef3434;  /* rejected 텍스트 */
+  /* draft: bg=--color-bg-tertiary(#26324c), text=--color-text-secondary(#aebbcc) */
+
+  --color-status-dot-active:    #07bd1c;  /* account-status active 점 */
+  --color-status-dot-inactive:  #91a3c5;  /* account-status inactive 점 */
+  --color-status-dot-deleted:   #ef3434;  /* account-status deleted 점 */
+
+  --color-blue-900: #004ba4;  /* number badge 배경 */
+
+  /* ─────────────────────────────────────────
    * Color — Role / Avatar
    * ───────────────────────────────────────── */
   --color-role-pm-bg:   #0d2d7d;  /* Product Manager GNB 배경 */
