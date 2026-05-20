@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home — Virtual Ambassador QR Solution Admin</title>
+  <link rel="stylesheet" href="./tokens.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'SamsungOne', Arial, sans-serif; background: var(--color-bg-primary); color: var(--color-text-primary); min-height: 100vh; }
+
+    /* ── GNB ── */
+    .gnb {
+      background: var(--color-role-pm-bg);
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+    .gnb-left { display: flex; gap: 16px; align-items: center; }
+    .gnb-logo { font-size: 12px; font-weight: 700; color: var(--color-white); line-height: 1.3; }
+    .gnb-mode-selector {
+      border: 1px solid var(--color-border-default);
+      border-radius: 4px;
+      padding: 6px 8px 6px 12px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: var(--body-md-size);
+      color: var(--color-text-primary);
+    }
+    .gnb-mode-selector span { font-size: 18px; color: var(--color-text-secondary); }
+    .gnb-right { display: flex; gap: 4px; align-items: center; }
+    .gnb-icon-btn {
+      width: 32px; height: 32px;
+      border-radius: 100px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--color-icon-subtle); font-size: 18px;
+    }
+    .gnb-icon-btn:hover { background: rgba(255,255,255,0.08); }
+    .gnb-avatar {
+      width: 32px; height: 32px; border-radius: 999px;
+      background: var(--color-avatar-blue);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: var(--color-text-primary);
+      cursor: pointer;
+    }
+
+    /* ── Layout ── */
+    .layout { display: flex; height: calc(100vh - 54px); }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 248px;
+      background: var(--color-bg-secondary);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px 0;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+    .menu-list { display: flex; flex-direction: column; gap: 2px; }
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+      padding: 8px 20px;
+      border-radius: 4px;
+      margin: 0 8px;
+      cursor: pointer;
+      font-size: var(--menu-md-size);
+      color: var(--color-text-secondary);
+      font-weight: var(--menu-md-weight);
+    }
+    .menu-item:hover { background: var(--color-bg-tertiary); }
+    .menu-item.active { background: var(--color-bg-tertiary); color: var(--color-text-primary); }
+    .menu-item-icon { width: 20px; height: 20px; opacity: 0.7; flex-shrink: 0; }
+    .menu-group-header {
+      display: flex; align-items: center; gap: 6px;
+      height: 36px; padding: 8px 20px; margin: 0 8px;
+      font-size: var(--menu-md-size); color: var(--color-text-primary);
+      cursor: pointer;
+    }
+    .menu-group-header:hover { background: var(--color-bg-tertiary); border-radius: 4px; }
+    .menu-sub-item {
+      height: 36px;
+      padding: 8px 46px;
+      cursor: pointer;
+      font-size: var(--menu-md-size);
+      color: var(--color-text-secondary);
+      border-radius: 4px;
+      margin: 0 8px;
+    }
+    .menu-sub-item:hover { background: var(--color-bg-tertiary); color: var(--color-text-primary); }
+    .superscript-box { padding: 12px 16px; }
+    .ss-title { font-size: var(--label-sm-size); color: var(--color-text-muted); margin-bottom: 8px; }
+    .ss-list { display: flex; flex-wrap: wrap; gap: 4px; }
+    .ss-item {
+      width: 24px; height: 24px; border: 1px solid var(--color-border-subtle);
+      border-radius: 4px; display: flex; align-items: center; justify-content: center;
+      font-size: var(--body-md-size); color: var(--color-text-secondary);
+      cursor: pointer;
+    }
+    .ss-item:hover { background: var(--color-bg-tertiary); }
+
+    /* ── Main Content ── */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* ── Section Title ── */
+    .section-title {
+      font-family: var(--title-xl-font);
+      font-size: var(--font-size-22);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    /* ── Monitoring Cards ── */
+    .monitoring-card-list { display: flex; gap: 20px; }
+    .monitoring-card {
+      flex: 1;
+      background: var(--color-bg-secondary);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .monitoring-card-title {
+      font-size: var(--label-md-size);
+      font-weight: var(--label-lg-weight);
+      color: var(--color-text-primary);
+      margin-bottom: 16px;
+    }
+    .monitoring-metrics { display: flex; gap: 24px; }
+    .metric-item {}
+    .metric-label { font-size: var(--caption-md-size); color: var(--color-text-muted); margin-bottom: 4px; }
+    .metric-value { font-size: 28px; font-weight: var(--font-weight-bold); color: var(--color-text-primary); line-height: 1.3; }
+
+    /* ── Status Section ── */
+    .status-card-list { display: flex; gap: 20px; }
+    .status-card {
+      background: var(--color-bg-secondary);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .status-card-left { flex: 1; min-width: 0; }
+    .status-card-right { width: 460px; flex-shrink: 0; }
+
+    .status-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .status-card-title {
+      font-size: 16px;
+      font-weight: var(--label-lg-weight);
+      color: var(--color-text-primary);
+    }
+    .btn-view-all {
+      background: var(--color-bg-tertiary);
+      border: none;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 10px;
+      font-weight: var(--label-lg-weight);
+      color: var(--color-white);
+      cursor: pointer;
+      font-family: var(--title-xl-font);
+      white-space: nowrap;
+    }
+    .btn-view-all:hover { background: var(--color-border-default); }
+
+    /* Summary metrics row */
+    .summary-metrics { display: flex; gap: 0; margin-bottom: 12px; }
+    .summary-metric { flex: 1; }
+    .summary-metric-label { font-size: var(--caption-md-size); color: var(--color-text-muted); margin-bottom: 4px; }
+    .summary-metric-value { font-size: 28px; font-weight: var(--font-weight-bold); color: var(--color-text-primary); line-height: 1.3; }
+
+    /* Mini table inside status card */
+    .section-divider { border: none; border-top: 1px solid var(--color-border-subtle); margin-bottom: 0; }
+    .mini-table { width: 100%; border-collapse: collapse; }
+    .mini-table-row { display: flex; align-items: center; border-bottom: 1px solid var(--color-border-subtle); height: 38px; }
+    .mini-table-thumb {
+      width: 40px; height: 38px; flex-shrink: 0;
+      padding: 6px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mini-table-thumb-img {
+      width: 28px; height: 26px;
+      background: var(--color-bg-tertiary);
+      border-radius: var(--size-4);
+      object-fit: contain;
+    }
+    .mini-table-name {
+      flex: 1;
+      padding: 0 12px;
+      font-size: var(--caption-md-size);
+      color: var(--color-text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .mini-table-date {
+      width: 92px;
+      text-align: right;
+      padding: 0 12px;
+      font-size: var(--caption-md-size);
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+
+    /* MLP Requests card */
+    .requests-metrics { display: flex; gap: 0; margin-bottom: 12px; }
+    .requests-metric { flex: 1; }
+    .requests-metric-label { font-size: var(--caption-md-size); color: var(--color-text-muted); margin-bottom: 4px; }
+    .requests-metric-value { font-size: 28px; font-weight: var(--font-weight-bold); color: var(--color-text-primary); line-height: 1.3; }
+
+    .requests-table-row { display: flex; align-items: center; border-bottom: 1px solid var(--color-border-subtle); height: 38px; gap: 0; }
+    .requests-cell { padding: 0 12px; font-size: var(--caption-md-size); color: var(--color-text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .requests-cell.lang { width: 64px; flex-shrink: 0; }
+    .requests-cell.model { width: 80px; flex-shrink: 0; }
+    .requests-cell.title { flex: 1; min-width: 0; }
+    .requests-cell.date { width: 80px; flex-shrink: 0; text-align: right; }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: var(--label-sm-size);
+      font-weight: var(--label-lg-weight);
+      white-space: nowrap;
+    }
+    .status-badge.approved { background: #1a4d2e; color: #4ade80; }
+    .status-badge.pending  { background: #4d3800; color: #facc15; }
+    .status-badge.rejected { background: #4d1a1a; color: #f87171; }
+
+    /* ── Footer ── */
+    footer {
+      padding: 12px 40px;
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--caption-md-size);
+      color: var(--color-text-muted);
+      flex-shrink: 0;
+    }
+    footer .right { display: flex; gap: 16px; }
+    footer a { color: var(--color-text-muted); text-decoration: none; cursor: pointer; }
+    footer a:hover { color: var(--color-text-secondary); }
+  </style>
+</head>
+<body>
+
+  <!-- GNB -->
+  <header class="gnb">
+    <div class="gnb-left">
+      <div class="gnb-logo">Virtual ambassador<br>QR Solution Admin</div>
+      <div class="gnb-mode-selector">
+        Product Manager Mode <span>&#x25BE;</span>
+      </div>
+    </div>
+    <div class="gnb-right">
+      <div class="gnb-icon-btn" title="Search"><svg width="20" height="20" viewBox="240 39 20 20" fill="currentColor"><path d="M255.938 56L250.958 51.0208C250.542 51.3264 250.085 51.566 249.588 51.7396C249.091 51.9132 248.562 52 248.001 52C246.611 52 245.431 51.5139 244.458 50.5417C243.486 49.5694 243 48.3889 243 47C243 45.6111 243.486 44.4306 244.458 43.4583C245.431 42.4861 246.611 42 248 42C249.389 42 250.569 42.4861 251.542 43.4583C252.514 44.4306 253 45.6113 253 47.0006C253 47.5616 252.913 48.0906 252.74 48.5877C252.566 49.0848 252.326 49.5417 252.021 49.9583L257 54.9375L255.938 56ZM248 50.5C248.972 50.5 249.799 50.1597 250.479 49.4792C251.16 48.7986 251.5 47.9722 251.5 47C251.5 46.0278 251.16 45.2014 250.479 44.5208C249.799 43.8403 248.972 43.5 248 43.5C247.028 43.5 246.201 43.8403 245.521 44.5208C244.84 45.2014 244.5 46.0278 244.5 47C244.5 47.9722 244.84 48.7986 245.521 49.4792C246.201 50.1597 247.028 50.5 248 50.5Z"/></svg></div>
+      <div class="gnb-icon-btn" title="Notice">&#x1F514;</div>
+      <div class="gnb-icon-btn" title="Alarm">&#x1F6CE;</div>
+      <div class="gnb-avatar">P</div>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div>
+        <div class="menu-list">
+          <div class="menu-item active">
+            <svg class="menu-item-icon" width="20" height="20" viewBox="280 0 20 20" fill="currentColor"><path d="M285.5 15.5H287.5V10.5H292.5V15.5H294.5V8.25L290 4.875L285.5 8.25V15.5ZM284 17V7.5L290 3L296 7.5V17H291V12H289V17H284Z"/></svg>
+            Home
+          </div>
+          <div class="menu-item">
+            <svg class="menu-item-icon" viewBox="0 0 20 20" fill="currentColor"><rect x="2" y="2" width="6" height="6" rx="1"/><rect x="12" y="2" width="6" height="6" rx="1"/><rect x="2" y="12" width="6" height="6" rx="1"/><rect x="12" y="12" width="6" height="6" rx="1"/></svg>
+            Dashboard
+          </div>
+          <div class="menu-group-header">
+            <svg class="menu-item-icon" width="20" height="20" viewBox="388 78 20 20" fill="currentColor"><path d="M391.5 94C391.087 94 390.734 93.8531 390.441 93.5592C390.147 93.2653 390 92.9119 390 92.4992V83.4942C390 83.0814 390.147 82.7292 390.441 82.4375C390.734 82.1458 391.087 82 391.5 82H400.25C400.484 82 400.706 82.0521 400.915 82.1562C401.124 82.2604 401.306 82.4097 401.458 82.6042L405.5 88L401.458 93.3958C401.306 93.5903 401.124 93.7396 400.915 93.8438C400.706 93.9479 400.484 94 400.25 94H391.5ZM391.5 92.5H400.25L403.625 88L400.25 83.5H391.5V92.5Z"/></svg>
+            Content Library
+          </div>
+          <div class="menu-sub-item">SmartThings Explore</div>
+          <div class="menu-sub-item">System Message</div>
+          <div class="menu-group-header">
+            <svg class="menu-item-icon" width="20" height="20" viewBox="428 78 20 20" fill="currentColor"><path d="M443 94V92H441V90.5H443V88.5H444.5V90.5H446.5V92H444.5V94H443ZM431.5 95C431.097 95 430.747 94.8507 430.448 94.5521C430.149 94.2535 430 93.9028 430 93.5V82.5C430 82.0875 430.149 81.7344 430.448 81.4406C430.747 81.1469 431.097 81 431.5 81H442.5C442.913 81 443.266 81.1469 443.559 81.4406C443.853 81.7344 444 82.0875 444 82.5V87H442.5V85H431.5V93.5H441.625V95H431.5ZM431.5 83.5H442.5V82.5H431.5V83.5Z"/></svg>
+            Product MLP
+          </div>
+        </div>
+      </div>
+      <div>
+        <hr style="border-color: var(--color-border-subtle); margin: 8px 16px;">
+        <div class="superscript-box">
+          <div class="ss-title">Copy Superscript</div>
+          <div class="ss-list">
+            <div class="ss-item">⁰</div><div class="ss-item">¹</div><div class="ss-item">²</div>
+            <div class="ss-item">³</div><div class="ss-item">⁴</div><div class="ss-item">⁵</div>
+            <div class="ss-item">⁶</div><div class="ss-item">⁷</div><div class="ss-item">⁸</div>
+            <div class="ss-item">⁹</div><div class="ss-item">⁽</div><div class="ss-item">⁾</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+      <main class="main-content">
+
+        <!-- Monitoring -->
+        <section>
+          <div class="section-title">Monitoring</div>
+          <div class="monitoring-card-list">
+            <div class="monitoring-card">
+              <div class="monitoring-card-title">Global Product MLP</div>
+              <div class="monitoring-metrics">
+                <div class="metric-item">
+                  <div class="metric-label">Published Page</div>
+                  <div class="metric-value">13</div>
+                </div>
+                <div class="metric-item" style="margin-left:32px;">
+                  <div class="metric-label">Language</div>
+                  <div class="metric-value">3</div>
+                </div>
+              </div>
+            </div>
+            <div class="monitoring-card">
+              <div class="monitoring-card-title">Global Product MLP</div>
+              <div class="monitoring-metrics">
+                <div class="metric-item">
+                  <div class="metric-label">Published Page</div>
+                  <div class="metric-value">13</div>
+                </div>
+                <div class="metric-item" style="margin-left:32px;">
+                  <div class="metric-label">Language</div>
+                  <div class="metric-value">3</div>
+                </div>
+              </div>
+            </div>
+            <div class="monitoring-card">
+              <div class="monitoring-card-title">Global Product MLP</div>
+              <div class="monitoring-metrics">
+                <div class="metric-item">
+                  <div class="metric-label">Published Page</div>
+                  <div class="metric-value">13</div>
+                </div>
+                <div class="metric-item" style="margin-left:32px;">
+                  <div class="metric-label">Language</div>
+                  <div class="metric-value">3</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Status -->
+        <section>
+          <div class="section-title">Status</div>
+          <div class="status-card-list">
+
+            <!-- Product MLP card -->
+            <div class="status-card status-card-left">
+              <div class="status-card-header">
+                <div class="status-card-title">Product MLP</div>
+                <!-- [신규] View All 버튼 → mlp-published-history.html로 이동 -->
+                <a href="mlp-published-history.html">
+                  <button class="btn-view-all">View All</button>
+                </a>
+              </div>
+              <div class="summary-metrics">
+                <div class="summary-metric">
+                  <div class="summary-metric-label">Published</div>
+                  <div class="summary-metric-value">12</div>
+                </div>
+              </div>
+              <hr class="section-divider">
+              <!-- Mini table -->
+              <div>
+                <div class="mini-table-row">
+                  <div class="mini-table-thumb"><img class="mini-table-thumb-img" src="https://assets.sha-virtual.com/service/product/image/20250520_ms92p5.png" alt="VR90F"></div>
+                  <div class="mini-table-name">VR90F</div>
+                  <div class="mini-table-date">2026-05-01</div>
+                </div>
+                <div class="mini-table-row">
+                  <div class="mini-table-thumb"><img class="mini-table-thumb-img" src="https://assets.sha-virtual.com/service/product/image/20260225_1258hv.png" alt="VR90F1"></div>
+                  <div class="mini-table-name">VR90F1</div>
+                  <div class="mini-table-date">2026-04-01</div>
+                </div>
+                <div class="mini-table-row">
+                  <div class="mini-table-thumb"><img class="mini-table-thumb-img" src="https://assets.sha-virtual.com/service/product/image/20250724_9614b1.png" alt="WD90H27"></div>
+                  <div class="mini-table-name">WD90H27</div>
+                  <div class="mini-table-date">2026-03-01</div>
+                </div>
+                <div class="mini-table-row">
+                  <div class="mini-table-thumb"><img class="mini-table-thumb-img" src="https://assets.sha-virtual.com/service/product/image/20260205_wr8h0v.png" alt="CC90H"></div>
+                  <div class="mini-table-name">CC90H</div>
+                  <div class="mini-table-date">2026-02-01</div>
+                </div>
+                <div class="mini-table-row">
+                  <div class="mini-table-thumb"><img class="mini-table-thumb-img" src="https://assets.sha-virtual.com/service/product/image/20260310_7l7wh3.png" alt="CC90H1"></div>
+                  <div class="mini-table-name">CC90H1</div>
+                  <div class="mini-table-date">2026-02-01</div>
+                </div>
+                <div class="mini-table-row">
+                  <div class="mini-table-thumb"><img class="mini-table-thumb-img" src="https://assets.sha-virtual.com/service/product/image/20250724_9614b1.png" alt="WD80H27"></div>
+                  <div class="mini-table-name">WD80H27</div>
+                  <div class="mini-table-date">2026-01-15</div>
+                </div>
+                <div class="mini-table-row">
+                  <div class="mini-table-thumb"><img class="mini-table-thumb-img" src="https://assets.sha-virtual.com/service/product/image/20250724_9614b1.png" alt="WD80H271"></div>
+                  <div class="mini-table-name">WD80H271</div>
+                  <div class="mini-table-date">2026-01-15</div>
+                </div>
+                <div class="mini-table-row">
+                  <div class="mini-table-thumb"><img class="mini-table-thumb-img" src="https://assets.sha-virtual.com/service/product/image/20260310_7l7wh3.png" alt="DW90H80"></div>
+                  <div class="mini-table-name">DW90H80</div>
+                  <div class="mini-table-date">2026-01-01</div>
+                </div>
+                <div class="mini-table-row">
+                  <div class="mini-table-thumb"><img class="mini-table-thumb-img" src="https://assets.sha-virtual.com/service/product/image/20260202_zvu8qo.png" alt="DW90H801"></div>
+                  <div class="mini-table-name">DW90H801</div>
+                  <div class="mini-table-date">2026-01-01</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- MLP Requests card -->
+            <div class="status-card status-card-right">
+              <div class="status-card-header">
+                <div class="status-card-title">MLP Requests</div>
+              </div>
+              <div class="requests-metrics">
+                <div class="requests-metric">
+                  <div class="requests-metric-label">Approved</div>
+                  <div class="requests-metric-value">12</div>
+                </div>
+                <div class="requests-metric">
+                  <div class="requests-metric-label">Pending Approval</div>
+                  <div class="requests-metric-value">6</div>
+                </div>
+                <div class="requests-metric">
+                  <div class="requests-metric-label">Rejected</div>
+                  <div class="requests-metric-value">3</div>
+                </div>
+              </div>
+              <hr class="section-divider">
+              <div>
+                <div class="requests-table-row">
+                  <div class="requests-cell lang">ko-KR</div>
+                  <div class="requests-cell model">WW8400D</div>
+                  <div class="requests-cell title">Quis hendre...</div>
+                  <div class="requests-cell date"><span class="status-badge approved">Approved</span></div>
+                </div>
+                <div class="requests-table-row">
+                  <div class="requests-cell lang">de-DE</div>
+                  <div class="requests-cell model">RF9000D</div>
+                  <div class="requests-cell title">Quis hendre...</div>
+                  <div class="requests-cell date"><span class="status-badge approved">Approved</span></div>
+                </div>
+                <div class="requests-table-row">
+                  <div class="requests-cell lang">fr-FR</div>
+                  <div class="requests-cell model">VR9700D</div>
+                  <div class="requests-cell title">Quis hendre...</div>
+                  <div class="requests-cell date"><span class="status-badge approved">Approved</span></div>
+                </div>
+                <div class="requests-table-row">
+                  <div class="requests-cell lang">en-GB</div>
+                  <div class="requests-cell model">WD8000DK</div>
+                  <div class="requests-cell title">Quis hendre...</div>
+                  <div class="requests-cell date"><span class="status-badge approved">Approved</span></div>
+                </div>
+                <div class="requests-table-row">
+                  <div class="requests-cell lang">ko-KR</div>
+                  <div class="requests-cell model">RF9000D</div>
+                  <div class="requests-cell title">Quis hendre...</div>
+                  <div class="requests-cell date"><span class="status-badge pending">Pending Approval</span></div>
+                </div>
+                <div class="requests-table-row">
+                  <div class="requests-cell lang">en-GB</div>
+                  <div class="requests-cell model">WW8400D</div>
+                  <div class="requests-cell title">Quis hendre...</div>
+                  <div class="requests-cell date"><span class="status-badge approved">Approved</span></div>
+                </div>
+                <div class="requests-table-row">
+                  <div class="requests-cell lang">de-DE</div>
+                  <div class="requests-cell model">RF9000D</div>
+                  <div class="requests-cell title">Quis hendre...</div>
+                  <div class="requests-cell date"><span class="status-badge approved">Approved</span></div>
+                </div>
+                <div class="requests-table-row">
+                  <div class="requests-cell lang">en-GB</div>
+                  <div class="requests-cell model">WD8000DK</div>
+                  <div class="requests-cell title">Quis hendre...</div>
+                  <div class="requests-cell date"><span class="status-badge approved">Approved</span></div>
+                </div>
+                <div class="requests-table-row">
+                  <div class="requests-cell lang">ko-KR</div>
+                  <div class="requests-cell model">RF9000D</div>
+                  <div class="requests-cell title">Quis hendre...</div>
+                  <div class="requests-cell date"><span class="status-badge pending">Pending Approval</span></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+
+      <footer>
+        <div>ⓒ Samsung</div>
+        <div class="right">
+          <a>Terms of Use</a>
+          <a>Privacy Notice</a>
+        </div>
+      </footer>
+    </div>
+
+  </div><!-- /.layout -->
+
+</body>
+</html>
