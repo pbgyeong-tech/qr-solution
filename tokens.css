@@ -77,8 +77,17 @@
   /* ─────────────────────────────────────────
    * Color — Role / Avatar
    * ───────────────────────────────────────── */
-  --color-role-pm-bg:   #0d2d7d;  /* Product Manager GNB 배경 */
-  --color-avatar-blue:  #264f7a;  /* 아바타 파란 배경 */
+  --color-role-pm-bg:    #0d2d7d;  /* Product Manager GNB 배경 */
+  --color-avatar-blue:   #264f7a;  /* regional/product manager 아바타 */
+  --color-avatar-purple: #5c4288;  /* local manager 아바타 */
+  --color-avatar-green:  #366e6d;  /* system manager 아바타 */
+
+  /* ─────────────────────────────────────────
+   * Color — Control (radio / checkbox / switch 전용)
+   * ───────────────────────────────────────── */
+  --color-control-selected:    #006bea;  /* 선택 상태 (= brand-primary) */
+  --color-control-border:      #4b5e7c;  /* 미선택 보더 (= border-default) */
+  --color-control-track:       #37486c;  /* switch 트랙 off (= bg-interactive) */
 
   /* ─────────────────────────────────────────
    * Opacity
